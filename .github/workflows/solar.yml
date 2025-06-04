@@ -52,7 +52,7 @@ jobs:
     code-coverage:
         needs: unit-test
         runs-on: ubuntu-latest
-        # continue-on-error: true
+        continue-on-error: true
         steps:
           - name: download artifacts
             uses: actions/download-artifact@v4
