@@ -1,7 +1,9 @@
 name: Solar-unit-test
 
 on: 
-    workflow_dispatch: {}
+    workflow_dispatch: 
+    push: 
+        branches: ['main', 'feature/*']
 
 jobs:
     unit-test:
@@ -14,7 +16,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                 node-version: '18'
-                
+
             - name: install 
               run: npm install
               
