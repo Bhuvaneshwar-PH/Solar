@@ -11,24 +11,24 @@ env:
   MONGO_PASSWORD: ${{secrets.mongopassword}}
 jobs:
     unit-test:
-        strategy:
-          matrix:
-            nodejs-version: [18,19,20]
-            os: [ubuntu-latest,windows-latest]
-            exclude:
-              - os: windows-latest
-                nodejs-version: 19
+        # strategy:
+        #   matrix:
+        #     nodejs-version: [18,19,20]
+        #     os: [ubuntu-latest,windows-latest]
+        #     exclude:
+        #       - os: windows-latest
+        #         nodejs-version: 19
           
 
-        runs-on: ${{matrix.os}}
+        runs-on: ubuntu-latest
         steps:
             - name: checkout
               uses: actions/checkout@v4
 
-            - name: node-setup for ${{matrix.nodejs-version}}
+            - name: node-setup 
               uses: actions/setup-node@v4
               with:
-                node-version: ${{matrix.nodejs-version}}
+                node-version: 18
 
             - name: install 
               run: npm install
@@ -39,5 +39,43 @@ jobs:
             - name: upload artifacts
               uses: actions/upload-artifact@v4
               with:
-                name: test-result_${{matrix.os}}_${{matrix.nodejs-version}}
+                name: test-result
                 path: test-results.xml
+
+            - name: Upload full folder
+              uses: actions/upload-artifact@v4
+              with:
+                name: folder
+                path: .
+
+
+    code-coverage:
+        needs: unit-test
+        runs-on: ubuntu-latest
+        # continue-on-error: true
+        steps:
+          - name: download artifacts
+            uses: actions/download-artifact@v4
+            with:
+              name: folder
+
+          - name: node-setup 
+            uses: actions/setup-node@v4
+            with:
+                node-version: 18
+
+          - name: install 
+            run: npm install
+              
+          - name: Test
+            run: npm run coverage
+
+          - name: upload coverage report
+            uses: actions/upload-artifact@v4
+            with:
+              name: coverage-report
+              path: coverage
+
+           
+            
+            
