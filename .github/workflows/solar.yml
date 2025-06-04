@@ -3,7 +3,7 @@ name: Solar-unit-test
 on: 
     workflow_dispatch: 
     push: 
-        branches: ['main', 'feature/*']
+        branches: ['main', 'feat/*']
 
 jobs:
     unit-test:
