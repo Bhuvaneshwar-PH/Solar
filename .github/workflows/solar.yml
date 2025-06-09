@@ -89,22 +89,27 @@ jobs:
               path: coverage
               retention-days: 1
 
-          - name: kubectl
-            uses: azure/setup-kubectl@v4
-            with:
-              version: '1.32.1'
+    kubernetes:
+        needs: code-coverage
+        runs-on: ubuntu-latest
+        steps:
+           - name: kubectl
+             uses: azure/setup-kubectl@v4
+             with:
+                version: '1.32.1'
 
-          - name: kubeconfig
-            uses: azure/k8s-set-context@v4
-            with:
-              method: kubeconfig
-              kubeconfig: ${{secrets.KUBECONFIG}}
+           - name: kubeconfig
+             uses: azure/k8s-set-context@v4
+             with:
+                method: kubeconfig
+                kubeconfig: ${{secrets.KUBECONFIG}}
 
 
-          - name: run kubectl
-            run : |
-              kubectl version
-              kubectl get nodes
+           - name: run kubectl
+             run : |
+                kubectl version
+                kubectl get nodes
+         
 
            
             
