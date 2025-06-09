@@ -32,10 +32,15 @@ jobs:
                 
             - name: cache depedency
               uses: actions/cache@v4
+              id: cache-npm
               with:
                 path: node_modules
                 key: ${{runner.os}}-node_modules-${{hashFiles('**/package-lock.json')}}
-                
+
+            - name: list npm
+              if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+              continue-on-error: true
+              run: npm list  
 
             - name: install 
               run: npm install
