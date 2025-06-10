@@ -1,8 +1,9 @@
 name: Testing outputs
 
 on:
-  workflow_dispatch:
-
+  workflow_dispatch: 
+  push: 
+    branches: ['main', 'feat/*']
 jobs:
   one:
     runs-on: ubuntu-latest
