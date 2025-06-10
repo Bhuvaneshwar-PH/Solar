@@ -4,8 +4,10 @@ on:
   workflow_dispatch: 
   # push: 
   #   branches: ['main', 'feat/*']
+
 jobs:
   one:
+    environment: dev
     runs-on: ubuntu-latest
     outputs:
       NUMBER: ${{ steps.env.outputs.number }}
@@ -16,9 +18,11 @@ jobs:
 
 
   two:
+    environment: dev
     needs: one
     runs-on: ubuntu-latest
     steps:
       - name: get env from above step
-        run: echo "From job one ${{ needs.one.outputs.NUMBER }}"
-        
+        run: |
+          echo "From job one ${{ needs.one.outputs.NUMBER }}"
+          echo "Name is ${{vars.NAME}}"
