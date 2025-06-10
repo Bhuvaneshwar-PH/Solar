@@ -19,5 +19,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: get env from above step
-        run: echo "From job one ${{needs.one.outputs.NUMBER}}"
+        run: echo "From job one ${{ needs.one.outputs.NUMBER }}"
         
