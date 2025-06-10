@@ -109,6 +109,10 @@ jobs:
              run : |
                 kubectl version
                 kubectl get nodes
+
+           - name: run env
+             run: |
+                 echo "print env ${{ fromJson( github ) }}"
          
 
            
