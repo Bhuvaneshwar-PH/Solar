@@ -1,0 +1,23 @@
+name: Testing outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    outputs:
+      NUMBER: ${{steps.env.outputs.number }}
+    steps:
+      - name: Set env output
+        id: env
+        run: echo "number=${{github.run_number}}" >> $GITHUB_OUTPUT
+
+
+  two:
+    needs: one
+    runs-on: ubuntu-latest
+    steps:
+      - name: get env from above step
+        run: echo "From job one ${{needs.one.outputs.NUMBER}}"
+        
