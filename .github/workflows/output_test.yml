@@ -7,7 +7,7 @@ jobs:
   one:
     runs-on: ubuntu-latest
     outputs:
-      NUMBER: ${{steps.env.outputs.number }}
+      NUMBER: ${{ steps.env.outputs.number }}
     steps:
       - name: Set env output
         id: env
