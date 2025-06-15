@@ -20,5 +20,5 @@ jobs:
     steps:
       - name: get env from above step
         run: |
-          echo "From job one ${{ needs.reuse-work.outputs.NUMBER }}"
+          echo "From job one ${{ needs.reuse-work.outputs.number }}"
           echo "Name is ${{ vars.NAME }}"

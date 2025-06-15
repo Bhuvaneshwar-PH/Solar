@@ -5,7 +5,7 @@ on:
         inputs:
             Number:
                 required: true
-                type: number
+                type: string
                 description: "run number"
             environment:
                 required: true
