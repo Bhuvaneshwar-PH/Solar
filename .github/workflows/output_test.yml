@@ -1,28 +1,22 @@
 name: Testing outputs
 
 on:
-  workflow_dispatch: 
-  # push: 
-  #   branches: ['main', 'feat/*']
+  workflow_dispatch:
 
 jobs:
-  one:
-    environment: dev
-    runs-on: ubuntu-latest
-    outputs:
-      NUMBER: ${{ steps.env.outputs.number }}
-    steps:
-      - name: Set env output
-        id: env
-        run: echo "number=${{ github.run_number }}" >> $GITHUB_OUTPUT
-
+  reuse-work:
+    uses: ./.github/workflows/reuse.yml
+    with:
+      Number: ${{ github.run_number }}
+      environment: dev
+    secrets: inherit
 
   two:
     environment: dev
-    needs: one
     runs-on: ubuntu-latest
+    needs: reuse-work
     steps:
       - name: get env from above step
         run: |
-          echo "From job one ${{ needs.one.outputs.NUMBER }}"
-          echo "Name is ${{vars.NAME}}"
+          echo "From job one ${{ needs.reuse-work.outputs.NUMBER }}"
+          echo "Name is ${{ vars.NAME }}"
