@@ -5,7 +5,7 @@ on:
 
 jobs:
   reuse-work:
-    uses: ./.github/workflows/reuse.yml
+    uses: Bhuvaneshwar-PH/Solar/.github/workflows/reuse.yml@feat/workflow
     with:
       Number: ${{ github.run_number }}
       environment: dev
