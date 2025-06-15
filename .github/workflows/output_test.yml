@@ -2,6 +2,8 @@ name: Testing outputs
 
 on:
   workflow_dispatch:
+  push: 
+    branches: ['feat/*']
 
 jobs:
   reuse-work:
