@@ -1,0 +1,8 @@
+# Helm Chart Information
+
+- deployment Name: {{ .Values.deploy.name }}
+- Namespace: {{ .Values.namespace }}
+- Deployment replicas: {{ .Values.deploy.replicas }}
+- To get pod and svc : kubectl get po,svc -n {{ .Values.namespace }}
+- Service Type: {{ .Values.service.type }}
+- Thanks for using our chart!!

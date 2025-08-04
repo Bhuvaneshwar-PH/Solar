@@ -1,0 +1,121 @@
+name: Solar-unit-test
+
+on: 
+    workflow_dispatch: 
+    push: 
+        branches: ['main', 'feat/*']
+
+env:
+  MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+  MONGO_USERNAME: ${{vars.mongouser}}
+  MONGO_PASSWORD: ${{secrets.mongopassword}}
+jobs:
+    unit-test:
+        # strategy:
+        #   matrix:
+        #     nodejs-version: [18,19,20]
+        #     os: [ubuntu-latest,windows-latest]
+        #     exclude:
+        #       - os: windows-latest
+        #         nodejs-version: 19 
+          
+
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+
+            - name: node-setup 
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+                
+            - name: cache depedency
+              uses: actions/cache@v4
+              id: cache-npm
+              with:
+                path: node_modules
+                key: ${{runner.os}}-node_modules-${{hashFiles('**/package-lock.json')}}
+
+            - name: list npm
+              if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+              continue-on-error: true
+              run: npm list  
+
+            - name: install 
+              run: npm install
+              
+            - name: Test
+              run: npm test
+
+            - name: upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: test-result
+                path: test-results.xml
+
+            - name: Upload full folder
+              uses: actions/upload-artifact@v4
+              with:
+                name: folder
+                path: .
+                retention-days: 1
+
+
+    code-coverage:
+        needs: unit-test
+        runs-on: ubuntu-latest
+        steps:
+          - name: download artifacts
+            uses: actions/download-artifact@v4
+            with:
+              name: folder
+
+          - name: node-setup 
+            uses: actions/setup-node@v4
+            with:
+                node-version: 18
+
+          - name: install 
+            run: npm install
+              
+          - name: Test
+            run: npm run coverage
+            continue-on-error: true
+
+          - name: upload coverage report
+            uses: actions/upload-artifact@v4
+            with:
+              name: coverage-report
+              path: coverage
+              retention-days: 1
+
+    kubernetes:
+        needs: code-coverage
+        runs-on: ubuntu-latest
+        steps:
+           - name: kubectl
+             uses: azure/setup-kubectl@v4
+             
+
+           - name: kubeconfig
+             uses: azure/k8s-set-context@v4
+             with:
+                method: kubeconfig
+                kubeconfig: ${{secrets.KUBECONFIG}}
+
+
+           - name: run kubectl
+             continue-on-error: true
+             timeout-minutes: 1
+             run : |
+                kubectl version
+                kubectl get nodes
+
+           - name: run env
+             run: env
+         
+
+           
+            
+            

@@ -1,0 +1,29 @@
+name: resuable workflow
+
+on:
+    workflow_call: 
+        inputs:
+            Number:
+                required: true
+                type: string
+                description: "run number"
+            environment:
+                required: true
+                type: string
+                description: "this is for getting env"
+        outputs:
+            number:
+                value: ${{jobs.resuse-jobs.outputs.NUMBER}}
+
+
+jobs:
+    resuse-jobs:
+        environment: ${{inputs.environment}}
+        runs-on: ubuntu-latest
+        outputs:
+         NUMBER: ${{ steps.env.outputs.number }}
+        steps:
+        - name: Set env output
+          id: env
+          run: echo "number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+    

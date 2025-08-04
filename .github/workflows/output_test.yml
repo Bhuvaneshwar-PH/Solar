@@ -1,0 +1,24 @@
+name: Testing outputs
+
+on:
+  workflow_dispatch:
+  push: 
+    branches: ['feat/*']
+
+jobs:
+  reuse-work:
+    uses: Bhuvaneshwar-PH/Solar/.github/workflows/reuse.yml@feat/workflow
+    with:
+      Number: ${{ github.run_number }}
+      environment: dev
+    secrets: inherit
+
+  two:
+    environment: dev
+    runs-on: ubuntu-latest
+    needs: reuse-work
+    steps:
+      - name: get env from above step
+        run: |
+          echo "From job one ${{ needs.reuse-work.outputs.number }}"
+          echo "Name is ${{ vars.NAME }}"
